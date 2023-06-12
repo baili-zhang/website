@@ -5,6 +5,7 @@ import com.bailizhang.website.core.Message;
 import com.bailizhang.website.entity.Article;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.ConnectException;
 import java.util.UUID;
 
 @RestController
@@ -17,12 +18,12 @@ public class ArticleController {
     }
 
     @GetMapping("/{id}")
-    private Article find(@PathVariable("id") String id) {
+    private Article find(@PathVariable("id") String id) throws ConnectException {
         return lynxDbConnection.find(id, Article.class);
     }
 
     @PostMapping
-    private String create(@RequestBody Article article) {
+    private String create(@RequestBody Article article) throws ConnectException {
         article.setId(generateId());
         int count = 5;
 
