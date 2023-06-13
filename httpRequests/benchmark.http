@@ -1,0 +1,13 @@
+###
+POST http://localhost:8080/benchmark/insert
+Content-Type: application/json
+
+{
+  "threadSize": 12,
+  "connectionSize": 6,
+  "keyLength": 20,
+  "valueLength": 300,
+  "keySize": 20000,
+  "columnFamily": "benchmark",
+  "column": "insertTest"
+}
