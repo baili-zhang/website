@@ -12,16 +12,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.ConnectException;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
 @RequestMapping("benchmark")
 public class BenchmarkController {
     private final LynxDbClient lynxDbClient;
     private final LynxDbProperties lynxDbProperties;
+
+    private final HashMap<String, String> map = new HashMap<>();
 
     public BenchmarkController(LynxDbClient client, LynxDbProperties properties) {
         lynxDbClient = client;
@@ -62,6 +66,8 @@ public class BenchmarkController {
                 String key = randomStr(keyLength);
                 String value = randomStr(valueLength);
 
+                map.put(key, value);
+
                 try {
                     connection.insert(
                             G.I.toBytes(key),
@@ -70,7 +76,7 @@ public class BenchmarkController {
                             G.I.toBytes(value)
                     );
                 } catch (ConnectException e) {
-                    throw new RuntimeException(e);
+                    System.out.println(e.getMessage());
                 }
 
                 latch.countDown();
@@ -86,6 +92,40 @@ public class BenchmarkController {
         BenchmarkResult result = new BenchmarkResult();
         result.setTotalTime(totalTime);
         result.setTimePerRequest(timePerRequest);
+
+        AtomicInteger matchKeyCount = new AtomicInteger(0);
+
+        CountDownLatch matchLatch = new CountDownLatch(keySize);
+
+        map.forEach((key, value) -> executor.submit(() -> {
+            Random random = new Random();
+            int conn = random.nextInt(0, connectionSize);
+
+            LynxDbConnection connection = connections[conn];
+
+            try {
+                byte[] findValue = connection.find(
+                        G.I.toBytes(key),
+                        columnFamily,
+                        column
+                );
+
+                if(value.equals(G.I.toString(findValue))) {
+                    matchKeyCount.incrementAndGet();
+                }
+
+            } catch (ConnectException e) {
+                System.out.println(e.getMessage());
+            }
+
+            matchLatch.countDown();
+        }));
+
+        matchLatch.await();
+
+        map.clear();
+
+        result.setMatchKeyCount(matchKeyCount.get());
 
         return result;
     }

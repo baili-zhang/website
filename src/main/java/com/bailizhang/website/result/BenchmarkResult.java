@@ -6,4 +6,5 @@ import lombok.Data;
 public class BenchmarkResult {
     private Long totalTime;
     private Double timePerRequest;
+    private Integer matchKeyCount;
 }

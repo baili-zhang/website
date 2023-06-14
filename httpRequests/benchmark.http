@@ -7,7 +7,7 @@ Content-Type: application/json
   "connectionSize": 6,
   "keyLength": 20,
   "valueLength": 300,
-  "keySize": 20000,
+  "keySize": 40000,
   "columnFamily": "benchmark",
   "column": "insertTest"
 }
