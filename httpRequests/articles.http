@@ -1,8 +1,0 @@
-###
-POST http://localhost:8080/articles
-Content-Type: application/json
-
-{
-  "title": "LynxDB Version 1.0 中文文档",
-  "content": "内容..."
-}

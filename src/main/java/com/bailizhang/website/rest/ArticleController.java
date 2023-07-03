@@ -1,15 +1,18 @@
-package com.bailizhang.website.controller;
+package com.bailizhang.website.rest;
 
 import com.bailizhang.lynxdb.client.connection.LynxDbConnection;
 import com.bailizhang.website.core.Message;
 import com.bailizhang.website.entity.Article;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.net.ConnectException;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("articles")
+@RequestMapping("article")
 public class ArticleController {
     private final LynxDbConnection lynxDbConnection;
 
@@ -17,25 +20,17 @@ public class ArticleController {
         lynxDbConnection = connection;
     }
 
-    @GetMapping("/{id}")
-    private Article find(@PathVariable("id") String id) throws ConnectException {
-        return lynxDbConnection.find(id, Article.class);
-    }
-
     @PostMapping
     private String create(@RequestBody Article article) throws ConnectException {
-        article.setId(generateId());
         int count = 5;
 
-        while(lynxDbConnection.existKey(article)) {
+        do {
             if(-- count < 0) {
                 return Message.FAILED;
             }
-            article.setId(generateId());
-        }
 
-        // TODO: 应该提供 “如果不存在则插入” 的原子操作
-        lynxDbConnection.insert(article);
+            article.setId(generateId());
+        } while (!lynxDbConnection.insertIfNotExisted(article));
 
         return article.getId();
     }

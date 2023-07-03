@@ -1,0 +1,14 @@
+###
+POST http://localhost:8080/article
+Content-Type: application/json
+
+{
+  "title": "LynxDB Version 1.0 中文文档",
+  "content": "内容..."
+}
+
+
+###
+GET http://localhost:8080/article/1688202532806f528fae1-5ca9-4f0f-a8d2-15ab40397d72
+
+

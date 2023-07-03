@@ -11,3 +11,9 @@ Content-Type: application/json
   "columnFamily": "benchmark",
   "column": "insertTest"
 }
+
+###
+POST http://localhost:8080/benchmark/find
+Content-Type: application/json
+
+{}

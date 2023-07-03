@@ -14,8 +14,5 @@ public class Article {
 
     @LynxDbMainColumn
     @LynxDbColumn
-    private String title;
-
-    @LynxDbColumn
     private String content;
 }

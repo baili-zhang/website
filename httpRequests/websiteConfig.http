@@ -1,0 +1,7 @@
+###
+POST http://localhost:8080/websiteConfig/homeArticleId
+Content-Type: application/json
+
+{
+  "articleId": "16883742846296aec734b-5de4-4669-b4cb-3af9f598c4f3"
+}

@@ -1,4 +1,4 @@
-package com.bailizhang.website.controller;
+package com.bailizhang.website.rest;
 
 import com.bailizhang.lynxdb.client.LynxDbClient;
 import com.bailizhang.lynxdb.client.connection.LynxDbConnection;
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.ConnectException;
-import java.util.HashMap;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,8 +24,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class BenchmarkController {
     private final LynxDbClient lynxDbClient;
     private final LynxDbProperties lynxDbProperties;
-
-    private final HashMap<String, String> map = new HashMap<>();
+    private final ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
+    private ExecutorService executor;
+    private LynxDbConnection[] connections;
+    private String columnFamily;
+    private String column;
 
     public BenchmarkController(LynxDbClient client, LynxDbProperties properties) {
         lynxDbClient = client;
@@ -42,16 +45,17 @@ public class BenchmarkController {
         int keySize = param.getKeySize();
         int keyLength = param.getKeyLength();
         int valueLength = param.getValueLength();
-        String columnFamily = param.getColumnFamily();
-        String column = param.getColumn();
 
-        LynxDbConnection[] connections = new LynxDbConnection[connectionSize];
+        columnFamily = param.getColumnFamily();
+        column = param.getColumn();
+
+        connections = new LynxDbConnection[connectionSize];
 
         for(int i = 0; i < connectionSize; i ++) {
             connections[i] = lynxDbClient.createConnection(host, port);
         }
 
-        ExecutorService executor = Executors.newFixedThreadPool(threadSize);
+        executor = Executors.newFixedThreadPool(threadSize);
         CountDownLatch latch = new CountDownLatch(keySize);
 
         long begin = System.currentTimeMillis();
@@ -93,13 +97,18 @@ public class BenchmarkController {
         result.setTotalTime(totalTime);
         result.setTimePerRequest(timePerRequest);
 
+        return result;
+    }
+
+    @PostMapping("find")
+    private void doFindTest() throws InterruptedException {
         AtomicInteger matchKeyCount = new AtomicInteger(0);
 
-        CountDownLatch matchLatch = new CountDownLatch(keySize);
+        CountDownLatch matchLatch = new CountDownLatch(map.size());
 
         map.forEach((key, value) -> executor.submit(() -> {
             Random random = new Random();
-            int conn = random.nextInt(0, connectionSize);
+            int conn = random.nextInt(0, connections.length);
 
             LynxDbConnection connection = connections[conn];
 
@@ -123,11 +132,7 @@ public class BenchmarkController {
 
         matchLatch.await();
 
-        map.clear();
-
-        result.setMatchKeyCount(matchKeyCount.get());
-
-        return result;
+        System.out.println(matchKeyCount.get());
     }
 
     private String randomStr(int length) {
