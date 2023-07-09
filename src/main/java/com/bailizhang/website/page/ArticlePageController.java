@@ -24,11 +24,11 @@ public class ArticlePageController {
         Article article = articleService.findArticle(id);
         model.addAttribute(article);
 
-        return "Article";
+        return "article/index";
     }
 
     @GetMapping
     private String createPage() {
-        return "CreateArticle";
+        return "article/create";
     }
 }

@@ -28,7 +28,7 @@
 		<dependency>
 			<groupId>com.bailizhang.lynxdb</groupId>
 			<artifactId>lynxdb-spring-boot-starter</artifactId>
-			<version>2023.7.1-snapshot</version>
+			<version>2023.7.8-alpha</version>
 		</dependency>
 		<dependency>
 			<groupId>org.commonmark</groupId>

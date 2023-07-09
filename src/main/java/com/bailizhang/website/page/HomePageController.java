@@ -26,12 +26,15 @@ public class HomePageController {
     private String homePage(Model model) throws ConnectException {
         String articleId = websiteConfigService.findHomePageArticleId();
         if(articleId == null) {
-            return "Error";
+            return "httpError/404";
         }
 
         Article article = articleService.findArticle(articleId);
-        model.addAttribute(article);
+        if(article == null) {
+            return "httpError/404";
+        }
 
-        return "Article";
+        model.addAttribute(article);
+        return "article/index";
     }
 }

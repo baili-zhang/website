@@ -1,9 +1,14 @@
+server:
+  port: 8080
+
 spring:
   freemarker:
     suffix: .ftl
     cache: false
     settings:
       template_update_delay: 0
+  mvc:
+    static-path-pattern: "/static/**"
 
 com:
   bailizhang:
