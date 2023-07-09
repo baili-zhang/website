@@ -1,7 +1,11 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
     width: 840px;
-    margin: 0 auto -50px;
-    padding: 0 50px 50px;
+    margin: 0 auto;
+    padding: 0 60px;
     border-left: 1px solid #d0d0d0;
     border-right: 1px solid #d0d0d0;
 }

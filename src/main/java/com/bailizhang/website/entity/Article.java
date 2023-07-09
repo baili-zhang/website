@@ -12,6 +12,9 @@ public class Article {
     @LynxDbKey
     private String id;
 
+    @LynxDbColumn
+    private String keywords;
+
     @LynxDbMainColumn
     @LynxDbColumn
     private String content;

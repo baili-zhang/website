@@ -1,7 +1,7 @@
 package com.bailizhang.website.rest;
 
-import com.bailizhang.website.core.Message;
 import com.bailizhang.website.param.HomeConfigParam;
+import com.bailizhang.website.result.Result;
 import com.bailizhang.website.service.WebsiteConfigService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,14 +20,14 @@ public class WebsiteConfigController {
     }
 
     @PostMapping("/homeArticleId")
-    private String setHomeArticleId(@RequestBody HomeConfigParam param) throws ConnectException {
+    private Result setHomeArticleId(@RequestBody HomeConfigParam param) throws ConnectException {
         if(param.getArticleId() == null) {
-            return Message.FAILED;
+            return new Result(false);
         }
 
         websiteConfigService.setHomePageArticleId(param.getArticleId());
 
-        return Message.OK;
+        return new Result(true);
     }
 
 }

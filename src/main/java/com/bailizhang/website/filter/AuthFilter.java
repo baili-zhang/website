@@ -34,6 +34,7 @@ public class AuthFilter implements Filter {
         allowPattern.add("/");
         allowPattern.add("/login");
         allowPattern.add("/401");
+        allowPattern.add("/404");
         allowPattern.add("/static/*");
     }
 

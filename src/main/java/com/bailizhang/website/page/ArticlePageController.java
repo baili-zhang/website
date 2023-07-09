@@ -22,6 +22,10 @@ public class ArticlePageController {
     @GetMapping("/{id}")
     private String indexPage(@PathVariable("id") String id, Model model) throws ConnectException {
         Article article = articleService.findArticle(id);
+        if(article == null) {
+            return "httpError/404";
+        }
+
         model.addAttribute(article);
 
         return "article/index";
