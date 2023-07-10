@@ -35,6 +35,7 @@ public class HomePageController {
         }
 
         model.addAttribute(article);
+        model.addAttribute("isHomePage", true);
         return "article/index";
     }
 }

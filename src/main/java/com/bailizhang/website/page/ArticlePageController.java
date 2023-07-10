@@ -27,7 +27,7 @@ public class ArticlePageController {
         }
 
         model.addAttribute(article);
-
+        model.addAttribute("isHomePage", false);
         return "article/index";
     }
 

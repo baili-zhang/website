@@ -2,6 +2,10 @@
     box-sizing: border-box;
 }
 
+html, body {
+    scroll-behavior: smooth;
+}
+
 body {
     width: 840px;
     margin: 0 auto;
@@ -9,4 +13,14 @@ body {
     border-left: 1px solid #d0d0d0;
     border-right: 1px solid #d0d0d0;
 }
+
+*::-webkit-scrollbar {
+    width: 3px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: #d0d0d0;
+}
+
+
 
