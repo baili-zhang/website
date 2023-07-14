@@ -16,6 +16,10 @@
     </#if>
 </article>
 
+<div id="footer">
+    备案号：<a href="/">沪</a>
+</div>
+
 <style>
     #side-content {
         position: fixed;
@@ -61,6 +65,17 @@
 
     #button-wrapper {
         text-align: center;
+    }
+
+    #footer {
+        position: fixed;
+        bottom: 24px;
+        right: 48px;
+        font-size: 14px;
+    }
+
+    #footer a {
+        color: #606060;
     }
 </style>
 
